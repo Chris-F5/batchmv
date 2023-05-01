@@ -1,0 +1,23 @@
+#!/bin/sh
+dir=.
+if [ "$1" != "" ]; then
+  dir=$1
+fi
+if [ "$EDITOR" == "" ]; then
+  echo "batchmv: \$EDITOR must be set."
+  exit 1
+fi
+cd $dir || exit 1
+file_new=$(mktemp ".batchmv-new.XXXX")
+file_old=$(mktemp ".batchmv-old.XXXX")
+ls -p | grep -v /$ | tee $file_old > $file_new
+$EDITOR $file_new
+if [ $(wc -l < $file_old) != $(wc -l < $file_new) ]; then
+  echo "batchmv: line count may not change."
+  rm $file
+  exit 1
+fi
+paste $file_old $file_new | while IFS=$'\t' read old new; do
+  mv -n "$old" "$new"
+done
+rm $file_new $file_old

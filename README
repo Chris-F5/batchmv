@@ -1,0 +1,6 @@
+batchmv
+-------
+
+Rename files on mass. Running `batchmv` will open $EDITOR with a list of
+newline separated files in the current working directory. When you exit the
+editor, batchmv will rename all the files as they were changed in the editor.
